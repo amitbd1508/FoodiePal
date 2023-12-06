@@ -9,10 +9,12 @@ import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.auth.User
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.shashank.sony.fancytoastlib.FancyToast
 import me.amitghosh.foodiepal.databinding.ActivityRegistrationBinding
+import me.amitghosh.foodiepal.model.UserDto
 
 class RegistrationActivity : AppCompatActivity() {
     private lateinit var binding : ActivityRegistrationBinding
@@ -65,16 +67,18 @@ class RegistrationActivity : AppCompatActivity() {
     private fun createUserInDb(name: String, user: FirebaseUser?) {
         if(user !== null) {
             db.collection("users")
-                .add(user)
+                .add(UserDto(name, user.email))
                 .addOnSuccessListener { documentReference ->
                     Log.d(TAG, "DocumentSnapshot added with ID: ${documentReference.id}")
                     Toast.makeText(applicationContext, "Registration Completed! Logging In...", Toast.LENGTH_LONG).show()
-                    FancyToast.makeText(this,"Hello World !",FancyToast.LENGTH_LONG,FancyToast.INFO,true);
                 }
                 .addOnFailureListener { e ->
                     FancyToast.makeText(this,"Hello World !",FancyToast.LENGTH_LONG,FancyToast.ERROR,true);
                     Log.w(TAG, "Error adding document", e)
                 }
+        } else {
+            Toast.makeText(applicationContext, "Failed to create user !", Toast.LENGTH_LONG).show()
+
         }
     }
 

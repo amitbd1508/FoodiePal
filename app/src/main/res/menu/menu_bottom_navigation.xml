@@ -4,13 +4,13 @@
     <item
         android:id="@+id/action_call"
         android:checked="true"
-        android:icon="@android:drawable/btn_plus"
+        android:icon="@drawable/recipe"
         android:title="@string/tab1"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_chat"
         android:checked="false"
-        android:icon="@android:drawable/btn_plus"
+        android:icon="@drawable/meal"
         android:title="@string/tab2"
         app:showAsAction="ifRoom" />
     <item

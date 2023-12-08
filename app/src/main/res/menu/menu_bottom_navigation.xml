@@ -16,7 +16,7 @@
     <item
         android:id="@+id/action_contact"
         android:checked="false"
-        android:icon="@android:drawable/btn_plus"
+        android:icon="@drawable/blogging"
         android:title="@string/tab3"
         app:showAsAction="ifRoom" />
 </menu>

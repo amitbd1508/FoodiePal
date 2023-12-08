@@ -5,7 +5,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
 import me.amitghosh.foodiepal.R
+import me.amitghosh.foodiepal.adapter.RecipeAdapter
+import me.amitghosh.foodiepal.databinding.FragmentRecipeBinding
+import me.amitghosh.foodiepal.model.Recipe
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -21,6 +25,7 @@ class RecipeFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+    lateinit var binding: FragmentRecipeBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +40,31 @@ class RecipeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_recipe, container, false)
+        binding = FragmentRecipeBinding.inflate(inflater, container, false)
+
+        setUpRecipeList();
+
+        return binding.root;
+    }
+
+    private fun setUpRecipeList() {
+        val recipes: List<Recipe> = listOf<Recipe>(
+            Recipe("Crossan Egg and Chease", "Some description", "someinstruction"),
+            Recipe("Crossan Egg and Chease", "Some description", "someinstruction"),
+            Recipe("Crossan Egg and Chease", "Some description", "someinstruction"),
+            Recipe("Crossan Egg and Chease", "Some description", "someinstruction"),
+            Recipe("Crossan Egg and Chease", "Some description", "someinstruction"),
+            Recipe("Crossan Egg and Chease", "Some description", "someinstruction"),
+            Recipe("Crossan Egg and Chease", "Some description", "someinstruction"),
+            Recipe("Crossan Egg and Chease", "Some description", "someinstruction"),
+            Recipe("Crossan Egg and Chease", "Some description", "someinstruction"),
+            Recipe("Crossan Egg and Chease", "Some description", "someinstruction")
+        )
+
+        val adapter: RecipeAdapter = RecipeAdapter(recipes);
+
+        binding.recyclerView.adapter = adapter
+        binding.recyclerView.layoutManager = LinearLayoutManager(context)
     }
 
     companion object {

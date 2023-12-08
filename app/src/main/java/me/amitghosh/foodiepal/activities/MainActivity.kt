@@ -26,9 +26,6 @@ import me.amitghosh.foodiepal.transformar.ZoomOutPageTransformer
 class MainActivity : AppCompatActivity() {
     private lateinit var binding : ActivityMainBinding
     var prevMenuItem: MenuItem? = null
-    lateinit var recipeFragment: RecipeFragment
-    lateinit var mealPlannerFragment: MealPlannerFragment
-    lateinit var blogFragment: BlogFragment
 
     private lateinit var auth: FirebaseAuth
 
@@ -75,7 +72,7 @@ class MainActivity : AppCompatActivity() {
 
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
-                prevMenuItem?.setChecked(false) ?: binding.bottomNavigation.getMenu().getItem(0).setChecked(false)
+                prevMenuItem?.setChecked(false) ?: binding.bottomNavigation.menu.getItem(0).setChecked(false)
                 Log.d("page", "onPageSelected: $position")
                 binding.bottomNavigation.getMenu().getItem(position).setChecked(true)
                 prevMenuItem = binding.bottomNavigation.getMenu().getItem(position)

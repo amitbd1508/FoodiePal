@@ -25,7 +25,6 @@ class LoginActivity : AppCompatActivity() {
 
         auth = Firebase.auth
 
-
         binding.regisLink.setOnClickListener {
             val intent= Intent(this, RegistrationActivity::class.java)
             startActivity(intent)

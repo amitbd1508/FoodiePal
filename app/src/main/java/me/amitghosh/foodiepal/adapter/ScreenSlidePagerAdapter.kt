@@ -14,12 +14,12 @@ public class ScreenSlidePagerAdapter(fa: FragmentActivity) : FragmentStateAdapte
     override fun getItemCount(): Int = NUM_PAGES
 
     override fun createFragment(position: Int): Fragment {
-        when(position % NUM_PAGES) {
+        return when(position % NUM_PAGES) {
             0 -> RecipeFragment()
-            1 -> MealPlannerFragment
-            2 -> BlogFragment
+            1 -> MealPlannerFragment()
+            2 -> BlogFragment()
+            else -> RecipeFragment()
         }
-        return RecipeFragment();
     }
 }
 

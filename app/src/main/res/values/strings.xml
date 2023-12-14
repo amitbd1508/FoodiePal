@@ -6,4 +6,11 @@
     <string name="tab2">Meal Planner</string>
     <string name="tab3">Blog</string>
     <string name="logout">Logout</string>
+    <string name="create_recipe">create recipe</string>
+    <string name="lblCancel">Cancel</string>
+    <string name="lblAdd">Add</string>
+    <string name="lblInstructions">Instructions</string>
+    <string name="lblIngredients">Ingredients</string>
+    <string name="lblRecipeName">Recipe Name</string>
+    <string name="lblAddNewRecipe">Add a recipe</string>
 </resources>

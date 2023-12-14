@@ -61,7 +61,9 @@ class MainActivity : AppCompatActivity() {
         binding.viewpager.adapter = adapter
 
         setupTabLayout()
+
     }
+
 
     private fun setupTabLayout() {
         TabLayoutMediator(binding.tabLayout, binding.viewpager) {
@@ -119,10 +121,10 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         // Handle item selection.
         return when (item.itemId) {
-            R.id.new_game -> {
+            R.id.version -> {
                 true
             }
-            R.id.help -> {
+            R.id.logout -> {
                 auth.signOut()
                 val intent= Intent(this, LoginActivity::class.java)
                 startActivity(intent)

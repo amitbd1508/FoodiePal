@@ -15,13 +15,15 @@ import me.amitghosh.foodiepal.model.Recipe
 class RecipeAdapter(private val recipes: List<Recipe>): RecyclerView.Adapter<RecipeAdapter.ViewHolder>() {
     class ViewHolder(view: View): RecyclerView.ViewHolder(view) {
         val recipeItem: CardView
-        val name: TextView
-        val image: ImageView
+        val tvRecipe: TextView
+        val tvIngredents: TextView
+        val tvInstructions: TextView
 
         init {
             recipeItem = view.findViewById(R.id.recipeItem)
-            name = view.findViewById(R.id.name)
-            image = view.findViewById(R.id.image)
+            tvRecipe = view.findViewById(R.id.tvRecipe)
+            tvIngredents = view.findViewById(R.id.tvIngredents)
+            tvInstructions = view.findViewById(R.id.tvInstructions)
         }
     }
 
@@ -35,7 +37,9 @@ class RecipeAdapter(private val recipes: List<Recipe>): RecyclerView.Adapter<Rec
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.name.text = recipes[position].name
+        holder.tvRecipe.text = recipes[position].recipe
+        holder.tvIngredents.text = recipes[position].ingredients
+        holder.tvInstructions.text = recipes[position].instructions
         holder.recipeItem.setOnClickListener {
             Log.d("Adapter", "Clicked $position")
         }

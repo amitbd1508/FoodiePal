@@ -7,9 +7,11 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
 import androidx.viewpager2.widget.ViewPager2
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
+import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -17,10 +19,13 @@ import me.amitghosh.foodiepal.R
 import me.amitghosh.foodiepal.adapter.ScreenSlidePagerAdapter
 import me.amitghosh.foodiepal.adapter.ViewPagerAdapter
 import me.amitghosh.foodiepal.databinding.ActivityMainBinding
+import me.amitghosh.foodiepal.fragments.AboutMeFragment
 import me.amitghosh.foodiepal.fragments.BlogFragment
+import me.amitghosh.foodiepal.fragments.ContactFragment
 import me.amitghosh.foodiepal.fragments.MealPlannerFragment
 import me.amitghosh.foodiepal.fragments.RecipeFragment
 import me.amitghosh.foodiepal.transformar.ZoomOutPageTransformer
+import java.lang.Exception
 
 
 class MainActivity : AppCompatActivity() {
@@ -28,6 +33,8 @@ class MainActivity : AppCompatActivity() {
     var prevMenuItem: MenuItem? = null
 
     private lateinit var auth: FirebaseAuth
+
+    lateinit var fragments: List<Fragment>
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,20 +44,50 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(binding.myToolbar)
 
         auth = Firebase.auth
+        fragments = listOf(
+            RecipeFragment(),
+            MealPlannerFragment(),
+            BlogFragment(),
+            ContactFragment(),
+            AboutMeFragment()
+        )
 
-        binding.viewpager.setPageTransformer(ZoomOutPageTransformer())
+        setupBottomNavigation();
 
+        setupViewPager();
+
+        val adapter = ScreenSlidePagerAdapter(fragments, supportFragmentManager, lifecycle)
+
+        binding.viewpager.adapter = adapter
+
+        setupTabLayout()
+    }
+
+    private fun setupTabLayout() {
+        TabLayoutMediator(binding.tabLayout, binding.viewpager) {
+                tab, position ->
+            when(position) {
+                0-> tab.text = "Recipe"
+                1-> tab.text = "Meal Planner"
+                2-> tab.text = "Blog"
+                3-> tab.text = "Contact"
+                4-> tab.text = "About Me"
+            }
+        }.attach()
+    }
+
+    private fun setupBottomNavigation() {
         binding.bottomNavigation.setOnItemSelectedListener {
             when (it.itemId) {
-                R.id.action_call -> {
+                R.id.action_recipe -> {
                     binding.viewpager.currentItem = 0
                     true
                 }
-                R.id.action_chat -> {
+                R.id.action_meal -> {
                     binding.viewpager.currentItem = 1
                     true
                 }
-                R.id.action_contact -> {
+                R.id.action_blog -> {
                     binding.viewpager.currentItem = 2
                     true
                 }
@@ -60,31 +97,6 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-
-        binding.viewpager.registerOnPageChangeCallback(object : OnPageChangeCallback() {
-            override fun onPageScrolled(
-                position: Int,
-                positionOffset: Float,
-                positionOffsetPixels: Int
-            ) {
-                super.onPageScrolled(position, positionOffset, positionOffsetPixels)
-            }
-
-            override fun onPageSelected(position: Int) {
-                super.onPageSelected(position)
-                prevMenuItem?.setChecked(false) ?: binding.bottomNavigation.menu.getItem(0).setChecked(false)
-                Log.d("page", "onPageSelected: $position")
-                binding.bottomNavigation.getMenu().getItem(position).setChecked(true)
-                prevMenuItem = binding.bottomNavigation.getMenu().getItem(position)
-                Log.e("Selected_Page", position.toString())
-            }
-
-            override fun onPageScrollStateChanged(state: Int) {
-                super.onPageScrollStateChanged(state)
-            }
-        });
-
-        setupViewPager(binding.viewpager);
     }
 
     override fun onBackPressed() {
@@ -121,12 +133,37 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    private fun setupViewPager(viewPager: ViewPager2) {
-        val adapter = ScreenSlidePagerAdapter(this)
+    private fun setupViewPager() {
 
-        adapter.createFragment(1)
-        adapter.createFragment(2)
-        adapter.createFragment(3)
-        viewPager.adapter = adapter
+        binding.viewpager.setPageTransformer(ZoomOutPageTransformer())
+
+        binding.viewpager.registerOnPageChangeCallback(object : OnPageChangeCallback() {
+            override fun onPageScrolled(
+                position: Int,
+                positionOffset: Float,
+                positionOffsetPixels: Int
+            ) {
+                super.onPageScrolled(position, positionOffset, positionOffsetPixels)
+            }
+
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                prevMenuItem?.setChecked(false) ?: binding.bottomNavigation.menu.getItem(0).setChecked(false)
+                try{
+                    Log.d("page", "onPageSelected: $position")
+                    binding.bottomNavigation.getMenu().getItem(position).setChecked(true)
+                    prevMenuItem = binding.bottomNavigation.getMenu().getItem(position)
+                    Log.e("Selected_Page", position.toString())
+                }catch (ex: Exception) {
+                    Log.d("MainActivity", "Array out of bounds")
+                }
+            }
+
+            override fun onPageScrollStateChanged(state: Int) {
+                super.onPageScrollStateChanged(state)
+            }
+        });
+
+
     }
 }

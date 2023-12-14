@@ -38,7 +38,7 @@ class RecipeFragment : Fragment() {
 
         setUpRecipeList();
 
-        binding.fab.setOnClickListener{
+        binding.fabCreateRecipe.setOnClickListener{
             showCreateRecipeDialog()
         }
 

@@ -13,4 +13,7 @@
     <string name="lblIngredients">Ingredients</string>
     <string name="lblRecipeName">Recipe Name</string>
     <string name="lblAddNewRecipe">Add a recipe</string>
+    <string name="lblAddMealPlanner">Add Meal Planner</string>
+    <string name="lblDay">Day</string>
+    <string name="lblPlan">Plan</string>
 </resources>

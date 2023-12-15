@@ -10,55 +10,31 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/dialog_title"
-        android:text="@string/lblAddNewRecipe"
+        android:text="@string/lblAddBlog"
         android:textStyle="bold" />
 
+
+
     <EditText
-        android:id="@+id/etRecipeName"
+        android:id="@+id/etTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
-        android:autofillHints="Recipe Name"
-        android:hint="@string/lblRecipeName"
+        android:autofillHints="Title"
+        android:hint="@string/lblTitle"
         android:inputType="text" />
 
     <EditText
-        android:id="@+id/etCookingTime"
+        android:id="@+id/etContent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
-        android:autofillHints="Recipe Name"
-        android:hint="@string/lblCookingTime"
-        android:inputType="numberDecimal" />
-
-    <RatingBar
-        android:id="@+id/userRating"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"/>
-
-    <EditText
-        android:id="@+id/etIngredients"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_marginBottom="10dp"
-        android:autofillHints="Ingredients"
+        android:autofillHints="Content"
         android:gravity="top|start"
-        android:hint="@string/lblIngredients"
+        android:hint="@string/lblContent"
         android:inputType="textMultiLine"
         android:maxLines="4" />
 
-    <EditText
-        android:id="@+id/etInstructions"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_marginBottom="10dp"
-        android:autofillHints="Instructions"
-        android:gravity="top|start"
-        android:hint="@string/lblInstructions"
-        android:inputType="textMultiLine"
-        android:maxLines="4" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -67,7 +43,7 @@
         android:orientation="horizontal">
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btnCancel"
+            android:id="@+id/btnBlogCancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:width="30dp"
@@ -75,7 +51,7 @@
             android:textAllCaps="false" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btnAdd"
+            android:id="@+id/btnBlogAdd"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:width="30dp"

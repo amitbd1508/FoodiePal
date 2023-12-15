@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.view.Window
 import android.widget.Button
 import android.widget.EditText
+import android.widget.RatingBar
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import me.amitghosh.foodiepal.R
@@ -56,10 +57,12 @@ class RecipeFragment : Fragment() {
         val etRecipe = dialog.findViewById(R.id.etRecipeName) as EditText
         val etIngredients = dialog.findViewById(R.id.etIngredients) as EditText
         val etInstructions = dialog.findViewById(R.id.etInstructions) as EditText
+        val etCookingTime = dialog.findViewById(R.id.etCookingTime) as EditText
+        val rating = dialog.findViewById(R.id.userRating) as RatingBar
 
         val addBtn = dialog.findViewById(R.id.btnAdd) as Button
         addBtn.setOnClickListener {
-            val recipe = Recipe(etRecipe.text.toString(), etIngredients.text.toString(), etInstructions.text.toString())
+            val recipe = Recipe(etRecipe.text.toString(), etIngredients.text.toString(), etInstructions.text.toString(),android.R.drawable.btn_star, rating.rating, etCookingTime.text.toString().toDouble())
             recipes.add(recipe)
             dialog.dismiss()
         }
@@ -74,16 +77,10 @@ class RecipeFragment : Fragment() {
 
     private fun setUpRecipeList() {
         recipes.addAll( listOf<Recipe>(
-            Recipe("Crossan Egg and Chease", "Some description", "someinstruction"),
-            Recipe("Crossan Egg and Chease", "Some description", "someinstruction"),
-            Recipe("Crossan Egg and Chease", "Some description", "someinstruction"),
-            Recipe("Crossan Egg and Chease", "Some description", "someinstruction"),
-            Recipe("Crossan Egg and Chease", "Some description", "someinstruction"),
-            Recipe("Crossan Egg and Chease", "Some description", "someinstruction"),
-            Recipe("Crossan Egg and Chease", "Some description", "someinstruction"),
-            Recipe("Crossan Egg and Chease", "Some description", "someinstruction"),
-            Recipe("Crossan Egg and Chease", "Some description", "someinstruction"),
-            Recipe("Crossan Egg and Chease", "Some description", "someinstruction")
+            Recipe("Crossan Egg and Chease", "Some description", "someinstruction", android.R.drawable.btn_star, 4f, 2.2),
+            Recipe("Crossan Egg and Chease", "Some description", "someinstruction", android.R.drawable.btn_star, 4.3f, 2.2),
+            Recipe("Crossan Egg and Chease", "Some description", "someinstruction", android.R.drawable.btn_star, 3.4f, 2.2),
+            Recipe("Crossan Egg and Chease", "Some description", "someinstruction", android.R.drawable.btn_star, 2.2f, 2.2),
         ))
 
         val adapter: RecipeAdapter = RecipeAdapter(recipes);

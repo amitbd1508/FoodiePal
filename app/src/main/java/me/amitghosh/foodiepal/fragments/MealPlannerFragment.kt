@@ -1,22 +1,27 @@
 package me.amitghosh.foodiepal.fragments
 
+import android.app.DatePickerDialog
 import android.app.Dialog
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.text.Editable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.Button
+import android.widget.DatePicker
 import android.widget.EditText
+import androidx.core.text.set
+import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import me.amitghosh.foodiepal.R
 import me.amitghosh.foodiepal.adapter.MealPlannerAdapter
-import me.amitghosh.foodiepal.adapter.RecipeAdapter
 import me.amitghosh.foodiepal.databinding.FragmentMealPlannerBinding
-import me.amitghosh.foodiepal.databinding.FragmentRecipeBinding
 import me.amitghosh.foodiepal.model.Meal
-import me.amitghosh.foodiepal.model.Recipe
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 /**
  * A simple [Fragment] subclass.
@@ -26,6 +31,7 @@ import me.amitghosh.foodiepal.model.Recipe
 class MealPlannerFragment : Fragment() {
     lateinit var binding: FragmentMealPlannerBinding
     val mealPlans = ArrayList<Meal>()
+    val initialDate = Calendar.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,12 +66,32 @@ class MealPlannerFragment : Fragment() {
         dialog.setCancelable(false)
         dialog.setContentView(R.layout.create_meal_panner_dialog)
 
-        val etDay = dialog.findViewById(R.id.etDay) as EditText
+        val btnDay = dialog.findViewById(R.id.btnDay) as Button
         val etPlan = dialog.findViewById(R.id.etPlan) as EditText
+
+        btnDay.setOnClickListener {
+            val datePickerDialog = DatePickerDialog(
+                requireContext(), {
+                        view, year, month, dayOfMonth ->
+                    val date = Calendar.getInstance()
+                    date.set(Calendar.YEAR, year)
+                    date.set(Calendar.MONTH, month)
+                    date.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+                    val simpleDateFormat =
+                        SimpleDateFormat("EEEE, dd MMMM yyyy", Locale.getDefault())
+                    val formattedDate = simpleDateFormat.format(date.time)
+                    btnDay.text = formattedDate
+                }, initialDate.get(Calendar.YEAR), initialDate.get(Calendar.MONTH), initialDate.get(Calendar.DAY_OF_MONTH)
+            )
+// Show the dialog
+            datePickerDialog.show()
+
+
+        }
 
         val addBtn = dialog.findViewById(R.id.btnMealAdd) as Button
         addBtn.setOnClickListener {
-            val meal = Meal(etDay.text.toString(), etPlan.text.toString())
+            val meal = Meal(btnDay.text.toString(), etPlan.text.toString())
             mealPlans.add(meal)
             dialog.dismiss()
         }
@@ -77,7 +103,6 @@ class MealPlannerFragment : Fragment() {
 
         dialog.show()
     }
-
     companion object {
         /**
          * Use this factory method to create a new instance of

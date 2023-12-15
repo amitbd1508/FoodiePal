@@ -16,4 +16,14 @@
     <string name="lblAddMealPlanner">Add Meal Planner</string>
     <string name="lblDay">Day</string>
     <string name="lblPlan">Plan</string>
+    <string name="click_to_select_date">Click to select date</string>
+    <string name="lblAddBlog">Add A Blog</string>
+    <string name="lblTitle">Title</string>
+    <string name="lblContent">Content</string>
+    <string name="lblCookingTime">Cooking Time</string>
+    <string name="phone_connection_text">6418192647</string>
+    <string name="email_communication_text">amitbd1508@gmail.com</string>
+    <string name="phone_icon_description">Phone Icon</string>
+    <string name="email_icon_description">Email Icon</string>
+    <string name="user_image_description">user image</string>
 </resources>

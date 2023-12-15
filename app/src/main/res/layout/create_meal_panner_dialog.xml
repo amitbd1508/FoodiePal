@@ -13,13 +13,16 @@
         android:text="@string/lblAddMealPlanner"
         android:textStyle="bold" />
 
-    <EditText
-        android:id="@+id/etDay"
+
+
+    <Button
+        android:id="@+id/btnDay"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:autofillHints="Recipe Name"
         android:hint="@string/lblDay"
+        android:text="@string/click_to_select_date"
         android:inputType="text" />
 
     <EditText

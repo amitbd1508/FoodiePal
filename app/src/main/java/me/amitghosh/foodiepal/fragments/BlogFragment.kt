@@ -1,17 +1,25 @@
 package me.amitghosh.foodiepal.fragments
 
+import BlogAdapter
+import android.app.Dialog
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import android.view.Window
+import android.widget.Button
+import android.widget.EditText
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import me.amitghosh.foodiepal.R
+import me.amitghosh.foodiepal.databinding.FragmentBlogBinding
+import me.amitghosh.foodiepal.model.Blog
+import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
 /**
  * A simple [Fragment] subclass.
@@ -20,30 +28,70 @@ private const val ARG_PARAM2 = "param2"
  */
 class BlogFragment : Fragment() {
     // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    lateinit var binding: FragmentBlogBinding
+    var blogs = ArrayList<Blog>();
+    val initialDate = Calendar.getInstance()
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        binding = FragmentBlogBinding.inflate(inflater, container, false)
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_blog, container, false)
+
+        blogs.add(Blog("title", "Content", "12/12/2023"))
+        setUpRecipeList()
+
+        binding.fabAddPost.setOnClickListener {
+            showCreateMealPlanner()
+        }
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        arguments?.takeIf { it.containsKey("ARG_OBJECT") }?.apply {
-            val textView: TextView = view.findViewById(android.R.id.text1)
-            textView.text = getInt("ARG_OBJECT").toString()
+
+    }
+
+    private fun showCreateMealPlanner() {
+        val dialog = Dialog(requireContext())
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setCancelable(false)
+        dialog.setContentView(R.layout.create_blog_dialog)
+
+        val etTitle = dialog.findViewById(R.id.etTitle) as EditText
+        val etContent = dialog.findViewById(R.id.etContent) as EditText
+
+
+        val addBtn = dialog.findViewById(R.id.btnBlogAdd) as Button
+        addBtn.setOnClickListener {
+            val sdf = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault())
+            val currentDateandTime = sdf.format(Date())
+            val blog = Blog(etTitle.text.toString(), etContent.text.toString(), currentDateandTime)
+            blogs.add(blog)
+            dialog.dismiss()
         }
+
+        val cancelBtn = dialog.findViewById(R.id.btnMealCancel) as Button
+        cancelBtn.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+    }
+
+    private fun setUpRecipeList() {
+
+
+        val adapter: BlogAdapter = BlogAdapter(blogs, requireContext());
+
+        binding.recyclerView.adapter = adapter
+        binding.recyclerView.layoutManager = LinearLayoutManager(context)
     }
 
     companion object {
@@ -59,10 +107,7 @@ class BlogFragment : Fragment() {
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
             BlogFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
             }
     }
+
 }

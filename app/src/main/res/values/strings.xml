@@ -26,4 +26,7 @@
     <string name="phone_icon_description">Phone Icon</string>
     <string name="email_icon_description">Email Icon</string>
     <string name="user_image_description">user image</string>
+    <string name="food_philosophy_text">Phylosopy</string>
+    <string name="favorite_recipes_text">recipes</string>
+    <string name="culinary_journey_text">journey text</string>
 </resources>

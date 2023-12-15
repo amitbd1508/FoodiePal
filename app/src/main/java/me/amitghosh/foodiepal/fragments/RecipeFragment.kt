@@ -1,7 +1,9 @@
 package me.amitghosh.foodiepal.fragments
 
 import android.app.Dialog
+import android.content.ContentValues.TAG
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -11,7 +13,13 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.RatingBar
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.auth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.firestore
 import me.amitghosh.foodiepal.R
 import me.amitghosh.foodiepal.adapter.RecipeAdapter
 import me.amitghosh.foodiepal.databinding.FragmentRecipeBinding
@@ -26,6 +34,10 @@ class RecipeFragment : Fragment() {
     // TODO: Rename and change types of parameters
     lateinit var binding: FragmentRecipeBinding
     val recipes = ArrayList<Recipe>()
+    val db = Firebase.firestore
+    private lateinit var auth: FirebaseAuth
+    lateinit var currentUserEmail: String
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -36,8 +48,12 @@ class RecipeFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentRecipeBinding.inflate(inflater, container, false)
+        auth = Firebase.auth
+
+        currentUserEmail = auth.currentUser?.email.toString()
 
         setUpRecipeList();
+        loadData();
 
         binding.fabCreateRecipe.setOnClickListener{
             showCreateRecipeDialog()
@@ -47,6 +63,22 @@ class RecipeFragment : Fragment() {
 
         return binding.root;
     }
+
+    private fun loadData() {
+        db.collection("recipe")
+            .get()
+            .addOnSuccessListener { result ->
+                for (document in result) {
+                    val recipe = document.toObject(Recipe::class.java)
+                    Log.d(TAG, "${document.id} => ${document.data}")
+                    recipes.add(recipe)
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.w(TAG, "Error getting documents: ", exception)
+            }
+    }
+
 
     private fun showCreateRecipeDialog() {
         val dialog = Dialog(requireContext())
@@ -62,9 +94,23 @@ class RecipeFragment : Fragment() {
 
         val addBtn = dialog.findViewById(R.id.btnAdd) as Button
         addBtn.setOnClickListener {
-            val recipe = Recipe(etRecipe.text.toString(), etIngredients.text.toString(), etInstructions.text.toString(),android.R.drawable.btn_star, rating.rating, etCookingTime.text.toString().toDouble())
+            val recipe = Recipe(etRecipe.text.toString(), etIngredients.text.toString(), etInstructions.text.toString(),android.R.drawable.btn_star, rating.rating, etCookingTime.text.toString().toDouble(), currentUserEmail)
             recipes.add(recipe)
-            dialog.dismiss()
+            db.collection("recipe")
+                .add(recipe)
+                .addOnSuccessListener { documentReference ->
+                    Log.d(TAG, "DocumentSnapshot written with ID: ${documentReference.id}")
+                    Toast.makeText(context, "Recipe Added", Toast.LENGTH_LONG).show()
+                    dialog.dismiss()
+
+
+                }
+                .addOnFailureListener { e ->
+                    Log.w(TAG, "Error adding document", e)
+                    Toast.makeText(context, "Failed to add in database", Toast.LENGTH_LONG).show()
+                    dialog.dismiss()
+
+                }
         }
 
         val cancelBtn = dialog.findViewById(R.id.btnCancel) as Button
@@ -76,13 +122,6 @@ class RecipeFragment : Fragment() {
     }
 
     private fun setUpRecipeList() {
-        recipes.addAll( listOf<Recipe>(
-            Recipe("Crossan Egg and Chease", "Some description", "someinstruction", android.R.drawable.btn_star, 4f, 2.2),
-            Recipe("Crossan Egg and Chease", "Some description", "someinstruction", android.R.drawable.btn_star, 4.3f, 2.2),
-            Recipe("Crossan Egg and Chease", "Some description", "someinstruction", android.R.drawable.btn_star, 3.4f, 2.2),
-            Recipe("Crossan Egg and Chease", "Some description", "someinstruction", android.R.drawable.btn_star, 2.2f, 2.2),
-        ))
-
         val adapter: RecipeAdapter = RecipeAdapter(recipes);
 
         binding.recyclerView.adapter = adapter

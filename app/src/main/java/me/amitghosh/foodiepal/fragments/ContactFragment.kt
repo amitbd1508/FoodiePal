@@ -35,52 +35,36 @@ class ContactFragment : Fragment() {
     ): View? {
         binding = FragmentContactBinding.inflate(layoutInflater)
         // Inflate the layout for this fragment
-        binding.phoneSection.setOnClickListener{
-            call(binding.tvPhone.text.toString())
+
+        binding.ivCallIcon.setOnClickListener {
+            val phoneNumber = binding.tvPhone.text.toString()
+            val callIntent = Intent(Intent.ACTION_DIAL)
+            callIntent.data = Uri.parse("tel:$phoneNumber")
+            startActivity(callIntent)
         }
 
-        binding.emailSection.setOnClickListener{
-            email(binding.tvemail.text.toString());
+        binding.ivTextIcon.setOnClickListener {
+            val phoneNumber = binding.tvPhone.text.toString()
+            val smsUri = Uri.parse("smsto:$phoneNumber")
+            val smsIntent = Intent(Intent.ACTION_VIEW, smsUri)
+            smsIntent.putExtra("sms_body", "Hello, thank you so much from FoodiePal.")
+            startActivity(smsIntent)
         }
+
+        binding.ivEmailIcon.setOnClickListener {
+            val emailAddress = binding.tvEmail.text.toString()
+            val subject = "Thank you"
+            val body = "Hey, this is a thank you email from FoodiePal app"
+
+            val emailIntent = Intent(Intent.ACTION_SENDTO)
+            emailIntent.data = Uri.parse("mailto:$emailAddress")
+            emailIntent.putExtra(Intent.EXTRA_SUBJECT, subject)
+            emailIntent.putExtra(Intent.EXTRA_TEXT, body)
+
+            startActivity(Intent.createChooser(emailIntent, "Send Email"))
+        }
+
         return binding.root
-    }
-
-    @SuppressLint("QueryPermissionsNeeded")
-    private fun email(recipientEmail: String) {
-
-        // Create an Intent with the ACTION_SENDTO action and the email Uri
-        val emailIntent = Intent(Intent.ACTION_SENDTO).apply {
-            data = Uri.parse("mailto:$recipientEmail")
-            putExtra(Intent.EXTRA_SUBJECT, "Subject of the email")
-            putExtra(Intent.EXTRA_TEXT, "Body of the email")
-        }
-
-        // Check if there's an app that can handle this Intent
-        if (emailIntent.resolveActivity(requireActivity().packageManager) != null) {
-            // Start the email client activity
-            startActivity(emailIntent)
-        } else {
-            // Handle the case where no app can handle the email Intent
-            // (e.g., display a message to the user)
-            Toast.makeText(requireContext(), "No app available to handle the email.", Toast.LENGTH_LONG).show()
-
-        }
-    }
-
-    fun call(phoneNumber: String) {
-
-        // Create an Intent with the ACTION_DIAL action and the phone number Uri
-        val dialIntent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:$phoneNumber"))
-
-        // Check if there's an app that can handle this Intent
-        if (dialIntent.resolveActivity(requireActivity().packageManager) != null) {
-            // Start the dialer activity
-            startActivity(dialIntent)
-        } else {
-            // Handle the case where no app can handle the dial Intent
-            // (e.g., display a message to the user)
-            Toast.makeText(requireContext(), "No app available to handle the call.", Toast.LENGTH_LONG).show()
-        }
     }
 
     companion object {

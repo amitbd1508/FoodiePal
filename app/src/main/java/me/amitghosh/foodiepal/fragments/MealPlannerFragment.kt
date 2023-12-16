@@ -2,8 +2,10 @@ package me.amitghosh.foodiepal.fragments
 
 import android.app.DatePickerDialog
 import android.app.Dialog
+import android.content.ContentValues
 import android.os.Bundle
 import android.text.Editable
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,10 +17,14 @@ import androidx.core.text.set
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.firestore
 import me.amitghosh.foodiepal.R
 import me.amitghosh.foodiepal.adapter.MealPlannerAdapter
 import me.amitghosh.foodiepal.databinding.FragmentMealPlannerBinding
 import me.amitghosh.foodiepal.model.Meal
+import me.amitghosh.foodiepal.model.Recipe
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -33,6 +39,12 @@ class MealPlannerFragment : Fragment() {
     val mealPlans = ArrayList<Meal>()
     val initialDate = Calendar.getInstance()
 
+    lateinit var adapter: MealPlannerAdapter
+
+    val db = Firebase.firestore
+    private lateinit var auth: FirebaseAuth
+    lateinit var currentUserEmail: String
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -44,6 +56,8 @@ class MealPlannerFragment : Fragment() {
         binding = FragmentMealPlannerBinding.inflate(inflater, container, false)
 
         setUpMealPlanList()
+
+        loadData()
         binding.fabCreateRecipe.setOnClickListener {
             showCreateMealPlanner()
         }
@@ -52,9 +66,25 @@ class MealPlannerFragment : Fragment() {
         return binding.root
     }
 
+    private fun loadData() {
+        db.collection("meal-planner")
+            .get()
+            .addOnSuccessListener { result ->
+                for (document in result) {
+                    val recipe = document.toObject(Meal::class.java)
+                    Log.d(ContentValues.TAG, "${document.id} => ${document.data}")
+                    mealPlans.add(recipe)
+                    adapter.notifyDataSetChanged()
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.w(ContentValues.TAG, "Error getting documents: ", exception)
+            }
+    }
+
     private fun setUpMealPlanList() {
 
-        val adapter: MealPlannerAdapter = MealPlannerAdapter(mealPlans);
+        adapter = MealPlannerAdapter(mealPlans);
 
         binding.recyclerView.adapter = adapter
         binding.recyclerView.layoutManager = LinearLayoutManager(context)

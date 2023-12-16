@@ -37,6 +37,7 @@ class RecipeFragment : Fragment() {
     val db = Firebase.firestore
     private lateinit var auth: FirebaseAuth
     lateinit var currentUserEmail: String
+    lateinit var adapter: RecipeAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,7 +53,10 @@ class RecipeFragment : Fragment() {
 
         currentUserEmail = auth.currentUser?.email.toString()
 
-        setUpRecipeList();
+        adapter = RecipeAdapter(recipes);
+
+        binding.recyclerView.adapter = adapter
+        binding.recyclerView.layoutManager = LinearLayoutManager(context)
         loadData();
 
         binding.fabCreateRecipe.setOnClickListener{
@@ -72,6 +76,7 @@ class RecipeFragment : Fragment() {
                     val recipe = document.toObject(Recipe::class.java)
                     Log.d(TAG, "${document.id} => ${document.data}")
                     recipes.add(recipe)
+                    adapter.notifyDataSetChanged()
                 }
             }
             .addOnFailureListener { exception ->
@@ -121,12 +126,6 @@ class RecipeFragment : Fragment() {
         dialog.show()
     }
 
-    private fun setUpRecipeList() {
-        val adapter: RecipeAdapter = RecipeAdapter(recipes);
-
-        binding.recyclerView.adapter = adapter
-        binding.recyclerView.layoutManager = LinearLayoutManager(context)
-    }
 
     companion object {
         /**

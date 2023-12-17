@@ -69,6 +69,8 @@ class RecipeFragment : Fragment() {
     }
 
     private fun loadData() {
+        recipes.clear()
+        adapter.notifyDataSetChanged()
         db.collection("recipe")
             .get()
             .addOnSuccessListener { result ->
@@ -76,8 +78,8 @@ class RecipeFragment : Fragment() {
                     val recipe = document.toObject(Recipe::class.java)
                     Log.d(TAG, "${document.id} => ${document.data}")
                     recipes.add(recipe)
-                    adapter.notifyDataSetChanged()
                 }
+                adapter.notifyDataSetChanged()
             }
             .addOnFailureListener { exception ->
                 Log.w(TAG, "Error getting documents: ", exception)

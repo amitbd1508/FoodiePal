@@ -13,6 +13,7 @@ import android.view.Window
 import android.widget.Button
 import android.widget.DatePicker
 import android.widget.EditText
+import android.widget.Toast
 import androidx.core.text.set
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
@@ -67,6 +68,8 @@ class MealPlannerFragment : Fragment() {
     }
 
     private fun loadData() {
+        mealPlans.clear()
+        adapter.notifyDataSetChanged()
         db.collection("meal-planner")
             .get()
             .addOnSuccessListener { result ->
@@ -74,8 +77,9 @@ class MealPlannerFragment : Fragment() {
                     val recipe = document.toObject(Meal::class.java)
                     Log.d(ContentValues.TAG, "${document.id} => ${document.data}")
                     mealPlans.add(recipe)
-                    adapter.notifyDataSetChanged()
                 }
+                adapter.notifyDataSetChanged()
+
             }
             .addOnFailureListener { exception ->
                 Log.w(ContentValues.TAG, "Error getting documents: ", exception)
@@ -111,6 +115,8 @@ class MealPlannerFragment : Fragment() {
                         SimpleDateFormat("EEEE, dd MMMM yyyy", Locale.getDefault())
                     val formattedDate = simpleDateFormat.format(date.time)
                     btnDay.text = formattedDate
+
+
                 }, initialDate.get(Calendar.YEAR), initialDate.get(Calendar.MONTH), initialDate.get(Calendar.DAY_OF_MONTH)
             )
 // Show the dialog
@@ -122,8 +128,24 @@ class MealPlannerFragment : Fragment() {
         val addBtn = dialog.findViewById(R.id.btnMealAdd) as Button
         addBtn.setOnClickListener {
             val meal = Meal(btnDay.text.toString(), etPlan.text.toString())
-            mealPlans.add(meal)
-            dialog.dismiss()
+
+            db.collection("meal-plans")
+                .add(meal)
+                .addOnSuccessListener { documentReference ->
+                    Log.d(ContentValues.TAG, "DocumentSnapshot written with ID: ${documentReference.id}")
+                    Toast.makeText(context, "Meals Added", Toast.LENGTH_LONG).show()
+                    mealPlans.add(meal)
+                    adapter.notifyDataSetChanged()
+                    dialog.dismiss()
+
+
+                }
+                .addOnFailureListener { e ->
+                    Log.w(ContentValues.TAG, "Error adding document", e)
+                    Toast.makeText(context, "Failed to add in database", Toast.LENGTH_LONG).show()
+                    dialog.dismiss()
+
+                }
         }
 
         val cancelBtn = dialog.findViewById(R.id.btnMealCancel) as Button

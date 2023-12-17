@@ -1,3 +1,7 @@
 # FoodPal
 
-<video width="630" height="300" src="https://github.com/amitbd1508/FoodiePal/blob/main/foodpal.mp4"></video>
+[![IMAGE ALT TEXT](http://img.youtube.com/vi/KEWCcmQGums/0.jpg)](http://www.youtube.com/watch?v=KEWCcmQGums "Demo")
+
+
+
+https://youtu.be/KEWCcmQGums
